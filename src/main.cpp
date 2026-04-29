@@ -2,6 +2,7 @@
 #include "adjacencyMatrixGraph.hpp"
 #include "edgeListGraph.hpp"
 #include "baseGraph.hpp"
+#include "visualizer.hpp"
 
 #include <string>
 
@@ -34,9 +35,11 @@ int main()
     populateSample(matrixGraph);
     populateSample(edgeListGraph);
 
-    listGraph.visualize("adjacencyListGraph.html");
-    matrixGraph.visualize("adjacencyMatrixGraph.html");
-    edgeListGraph.visualize("edgeListGraph.html");
+    graph::Visualizer visualizer;
+    visualizer.AddGraph(listGraph.ToJson());
+    visualizer.AddGraph(matrixGraph.ToJson());
+    visualizer.AddGraph(edgeListGraph.ToJson());
+    visualizer.Visualize("graphs.html");
 
     return 0;
 }

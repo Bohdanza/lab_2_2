@@ -34,8 +34,7 @@ namespace graph
 
             std::string NodesToJson() const;
             std::string EdgesToJson() const;
-
-            virtual void visualize(const std::string& path) const;
+            std::string ToJson() const;
     };
 
 }
