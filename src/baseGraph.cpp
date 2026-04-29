@@ -22,9 +22,8 @@ namespace Graph
                 : n.Label + " (" + std::to_string(n.Weight) + ")";
             oss << "{\"id\":" << n.Id
                 << ",\"label\":\"" << label << "\""
-                << ",\"weight\":" << n.Weight;
-            if (n.Active)
-                oss << ",\"color\":{\"background\":\"orange\",\"border\":\"#cc7000\"}";
+                << ",\"weight\":" << n.Weight
+                << ",\"color\":{\"background\":\"orange\",\"border\":\"#cc7000\"}";
             oss << "}";
             if (i + 1 < nodes.size()) oss << ",";
         }
@@ -48,6 +47,8 @@ namespace Graph
                 << ",\"weight\":" << e.Weight;
             if (e.Active)
                 oss << ",\"color\":\"green\",\"width\":4";
+            else
+                oss << ",\"color\":\"orange\"";
             oss << "}";
             if (i + 1 < edges.size()) oss << ",";
         }

@@ -460,46 +460,45 @@ int main()
 
     Visualizer visualizer;
 
-    for (size_t testIdx = 0; testIdx < testFiles.size(); ++testIdx)
+    struct Algorithm
     {
-        const auto& file = testFiles[testIdx];
-        const int storageKind = static_cast<int>(testIdx % 3);
+        std::string Name;
+        std::function<void(BaseGraph&, int, int)> Run;
+    };
 
-        AdjacencyListGraph proto(file);
-        const auto verts = proto.GetVertices();
-        if (verts.empty()) continue;
-        const int source = verts.front().Id;
-        const int sink = verts.back().Id;
+    const std::vector<Algorithm> algorithms = {
+        {"BFS",            [](BaseGraph& g, int s, int)   { RunBFS(g, s); }},
+        {"DFS",            [](BaseGraph& g, int s, int)   { RunDFS(g, s); }},
+        {"Kruskal MST",    [](BaseGraph& g, int, int)     { RunKruskal(g); }},
+        {"Prim MST",       [](BaseGraph& g, int s, int)   { RunPrim(g, s); }},
+        {"Bellman-Ford",   [](BaseGraph& g, int s, int t) { RunBellmanFord(g, s, t); }},
+        {"Dijkstra",       [](BaseGraph& g, int s, int t) { RunDijkstra(g, s, t); }},
+        {"Floyd-Warshall", [](BaseGraph& g, int s, int t) { RunFloydWarshall(g, s, t); }},
+        {"Johnson",        [](BaseGraph& g, int s, int t) { RunJohnson(g, s, t); }},
+        {"Ford-Fulkerson", [](BaseGraph& g, int s, int t) { RunFordFulkerson(g, s, t); }},
+        {"Edmonds-Karp",   [](BaseGraph& g, int s, int t) { RunEdmondsKarp(g, s, t); }},
+    };
 
-        const std::string testTag = "T" + std::to_string(testIdx + 1) +
-                                    " (" + storageName(storageKind) + ")";
+    for (const auto& algo : algorithms)
+    {
+        for (size_t fileIdx = 0; fileIdx < testFiles.size(); ++fileIdx)
+        {
+            const auto& file = testFiles[fileIdx];
+            const int storageKind = static_cast<int>(fileIdx % 3);
 
-        auto run = [&](const std::string& name, const std::function<void(BaseGraph&)>& algo) {
+            AdjacencyListGraph proto(file);
+            const auto verts = proto.GetVertices();
+            if (verts.empty()) continue;
+            const int source = verts.front().Id;
+            const int sink = verts.back().Id;
+
+            const std::string testTag = "T" + std::to_string(fileIdx + 1) +
+                                        " (" + storageName(storageKind) + ")";
+
             auto g = makeGraph(storageKind, file);
-            algo(*g);
-            visualizer.AddGraph(testTag + " | " + name, g->ToJson());
-        };
-
-        run("BFS (src=" + std::to_string(source) + ")",
-            [&](BaseGraph& g) { RunBFS(g, source); });
-        run("DFS (src=" + std::to_string(source) + ")",
-            [&](BaseGraph& g) { RunDFS(g, source); });
-        run("Kruskal MST",
-            [&](BaseGraph& g) { RunKruskal(g); });
-        run("Prim MST (root=" + std::to_string(source) + ")",
-            [&](BaseGraph& g) { RunPrim(g, source); });
-        run("Bellman-Ford " + std::to_string(source) + "->" + std::to_string(sink),
-            [&](BaseGraph& g) { RunBellmanFord(g, source, sink); });
-        run("Dijkstra " + std::to_string(source) + "->" + std::to_string(sink),
-            [&](BaseGraph& g) { RunDijkstra(g, source, sink); });
-        run("Floyd-Warshall " + std::to_string(source) + "->" + std::to_string(sink),
-            [&](BaseGraph& g) { RunFloydWarshall(g, source, sink); });
-        run("Johnson " + std::to_string(source) + "->" + std::to_string(sink),
-            [&](BaseGraph& g) { RunJohnson(g, source, sink); });
-        run("Ford-Fulkerson " + std::to_string(source) + "->" + std::to_string(sink),
-            [&](BaseGraph& g) { RunFordFulkerson(g, source, sink); });
-        run("Edmonds-Karp " + std::to_string(source) + "->" + std::to_string(sink),
-            [&](BaseGraph& g) { RunEdmondsKarp(g, source, sink); });
+            algo.Run(*g, source, sink);
+            visualizer.AddGraph(algo.Name + " | " + testTag, g->ToJson());
+        }
     }
 
     visualizer.Visualize("graphs.html");
