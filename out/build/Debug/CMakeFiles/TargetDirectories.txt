@@ -1,0 +1,3 @@
+D:/uni/lab_2_2/lab_2_2/lab_2_2/out/build/Debug/CMakeFiles/lab_2_2.dir
+D:/uni/lab_2_2/lab_2_2/lab_2_2/out/build/Debug/CMakeFiles/edit_cache.dir
+D:/uni/lab_2_2/lab_2_2/lab_2_2/out/build/Debug/CMakeFiles/rebuild_cache.dir
