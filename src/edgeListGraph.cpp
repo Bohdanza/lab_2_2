@@ -2,55 +2,62 @@
 
 #include <algorithm>
 
-using namespace graph;
+using namespace Graph;
 
 EdgeListGraph::EdgeListGraph(const std::string& filename)
 {
-    LoadFromFile(filename);
+    loadFromFile(filename);
 }
 
 bool EdgeListGraph::hasVertex(int id) const
 {
-    return std::any_of(vertices_.begin(), vertices_.end(), [id](const Vertex &v) { return v.id == id; });
+    return std::any_of(v_vertices.begin(), v_vertices.end(), [id](const Vertex &v) { return v.Id == id; });
 }
 
-void EdgeListGraph::addVertex(int id, const std::string &label, int weight)
+void EdgeListGraph::AddVertex(int id, const std::string &label, int weight)
 {
     if (hasVertex(id))
         return;
-    vertices_.push_back({id, label, weight});
+    v_vertices.push_back({id, label, weight});
 }
 
-void EdgeListGraph::removeVertex(int id)
+void EdgeListGraph::RemoveVertex(int id)
 {
-    vertices_.erase(
-        std::remove_if(vertices_.begin(), vertices_.end(), [id](const Vertex &v) { return v.id == id; }),
-        vertices_.end());
-    edges_.erase(std::remove_if(edges_.begin(), edges_.end(),
-                                [id](const Edge &e) { return e.from == id || e.to == id; }),
-                 edges_.end());
+    v_vertices.erase(
+        std::remove_if(v_vertices.begin(), v_vertices.end(), [id](const Vertex &v) { return v.Id == id; }),
+        v_vertices.end());
+    v_edges.erase(std::remove_if(v_edges.begin(), v_edges.end(),
+                                [id](const Edge &e) { return e.From == id || e.To == id; }),
+                 v_edges.end());
 }
 
-void EdgeListGraph::addEdge(int from, int to, const std::string &label, int weight)
+void EdgeListGraph::AddEdge(int from, int to, const std::string &label, int weight)
 {
     if (!hasVertex(from) || !hasVertex(to))
         return;
-    edges_.push_back({from, to, label, weight});
+    v_edges.push_back({from, to, label, weight});
 }
 
-void EdgeListGraph::removeEdge(int from, int to)
+void EdgeListGraph::RemoveEdge(int from, int to)
 {
-    edges_.erase(std::remove_if(edges_.begin(), edges_.end(),
-                                [from, to](const Edge &e) { return e.from == from && e.to == to; }),
-                 edges_.end());
+    v_edges.erase(std::remove_if(v_edges.begin(), v_edges.end(),
+                                [from, to](const Edge &e) { return e.From == from && e.To == to; }),
+                 v_edges.end());
 }
 
-std::vector<Vertex> EdgeListGraph::getVertices() const
+void EdgeListGraph::SetEdgeActive(int from, int to, bool active)
 {
-    return vertices_;
+    for (auto &e : v_edges)
+        if (e.From == from && e.To == to)
+            e.Active = active;
 }
 
-std::vector<Edge> EdgeListGraph::getEdges() const
+std::vector<Vertex> EdgeListGraph::GetVertices() const
 {
-    return edges_;
+    return v_vertices;
+}
+
+std::vector<Edge> EdgeListGraph::GetEdges() const
+{
+    return v_edges;
 }

@@ -4,7 +4,7 @@
 
 #include <vector>
 
-namespace graph
+namespace Graph
 {
     class EdgeListGraph : public BaseGraph
     {
@@ -12,17 +12,18 @@ namespace graph
             EdgeListGraph() = default;
             explicit EdgeListGraph(const std::string& filename);
 
-            void addVertex(int id, const std::string& label, int weight = -1) override;
-            void removeVertex(int id) override;
-            void addEdge(int from, int to, const std::string& label, int weight = 0) override;
-            void removeEdge(int from, int to) override;
+            void AddVertex(int id, const std::string& label, int weight = -1) override;
+            void RemoveVertex(int id) override;
+            void AddEdge(int from, int to, const std::string& label, int weight = 0) override;
+            void RemoveEdge(int from, int to) override;
+            void SetEdgeActive(int from, int to, bool active) override;
 
-            std::vector<Vertex> getVertices() const override;
-            std::vector<Edge> getEdges() const override;
+            std::vector<Vertex> GetVertices() const override;
+            std::vector<Edge> GetEdges() const override;
 
         private:
-            std::vector<Vertex> vertices_;
-            std::vector<Edge> edges_;
+            std::vector<Vertex> v_vertices;
+            std::vector<Edge> v_edges;
 
             bool hasVertex(int id) const;
     };

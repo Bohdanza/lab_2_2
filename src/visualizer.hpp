@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-namespace graph
+namespace Graph
 {
     class Visualizer
     {
@@ -12,6 +12,6 @@ namespace graph
             void Visualize(const std::string& path) const;
 
         private:
-            std::vector<std::string> graphs_;
+            std::vector<std::string> v_graphs;
     };
 }

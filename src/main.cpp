@@ -9,11 +9,11 @@ int main()
 {
     const std::string inputPath = "testGraph.txt";
 
-    graph::AdjacencyListGraph listGraph(inputPath);
-    graph::AdjacencyMatrixGraph matrixGraph(inputPath);
-    graph::EdgeListGraph edgeListGraph(inputPath);
+    Graph::AdjacencyListGraph listGraph(inputPath);
+    Graph::AdjacencyMatrixGraph matrixGraph(inputPath);
+    Graph::EdgeListGraph edgeListGraph(inputPath);
 
-    graph::Visualizer visualizer;
+    Graph::Visualizer visualizer;
     visualizer.AddGraph(listGraph.ToJson());
     visualizer.AddGraph(matrixGraph.ToJson());
     visualizer.AddGraph(edgeListGraph.ToJson());

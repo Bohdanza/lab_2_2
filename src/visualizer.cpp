@@ -4,13 +4,13 @@
 #include <fstream>
 #include <sstream>
 
-namespace graph
+namespace Graph
 {
 
     namespace
     {
 
-        void openInBrowser(const std::string& path)
+        void OpenInBrowser(const std::string& path)
         {
 #if defined(_WIN32)
             std::string cmd = "start \"\" \"" + path + "\"";
@@ -26,13 +26,13 @@ namespace graph
 
     void Visualizer::AddGraph(const std::string& json)
     {
-        graphs_.push_back(json);
+        v_graphs.push_back(json);
     }
 
     void Visualizer::Visualize(const std::string& path) const
     {
         std::ostringstream tiles;
-        for (size_t i = 0; i < graphs_.size(); ++i)
+        for (size_t i = 0; i < v_graphs.size(); ++i)
         {
             tiles << "    <div class=\"tile\"><div class=\"title\">Graph " << (i + 1)
                   << "</div><div id=\"graph" << i << "\" class=\"canvas\"></div></div>\n";
@@ -40,10 +40,10 @@ namespace graph
 
         std::ostringstream payload;
         payload << "[";
-        for (size_t i = 0; i < graphs_.size(); ++i)
+        for (size_t i = 0; i < v_graphs.size(); ++i)
         {
-            payload << graphs_[i];
-            if (i + 1 < graphs_.size()) payload << ",";
+            payload << v_graphs[i];
+            if (i + 1 < v_graphs.size()) payload << ",";
         }
         payload << "]";
 
@@ -82,6 +82,6 @@ namespace graph
 </html>)";
         out.close();
 
-        openInBrowser(path);
+        OpenInBrowser(path);
     }
 }

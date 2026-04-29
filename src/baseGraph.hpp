@@ -4,22 +4,23 @@
 #include <string>
 #include <vector>
 
-namespace graph
+namespace Graph
 {
 
     struct Vertex
     {
-        int id;
-        std::string label;
-        int weight = -1;
+        int Id;
+        std::string Label;
+        int Weight = -1;
     };
 
     struct Edge
     {
-        int from;
-        int to;
-        std::string label;
-        int weight = 0;
+        int From;
+        int To;
+        std::string Label;
+        int Weight = 0;
+        bool Active = false;
     };
 
     class BaseGraph
@@ -27,21 +28,22 @@ namespace graph
         public:
             virtual ~BaseGraph() = default;
 
-            virtual void addVertex(int id, const std::string& label, int weight = -1) = 0;
-            virtual void removeVertex(int id) = 0;
-            virtual void addEdge(int from, int to, const std::string& label, int weight = 0) = 0;
-            virtual void removeEdge(int from, int to) = 0;
+            virtual void AddVertex(int id, const std::string& label, int weight = -1) = 0;
+            virtual void RemoveVertex(int id) = 0;
+            virtual void AddEdge(int from, int to, const std::string& label, int weight = 0) = 0;
+            virtual void RemoveEdge(int from, int to) = 0;
+            virtual void SetEdgeActive(int from, int to, bool active) = 0;
 
-            virtual std::vector<Vertex> getVertices() const = 0;
-            virtual std::vector<Edge> getEdges() const = 0;
+            virtual std::vector<Vertex> GetVertices() const = 0;
+            virtual std::vector<Edge> GetEdges() const = 0;
 
             std::string NodesToJson() const;
             std::string EdgesToJson() const;
             std::string ToJson() const;
 
         protected:
-            void LoadFromStream(std::istream& in);
-            void LoadFromFile(const std::string& filename);
+            void loadFromStream(std::istream& in);
+            void loadFromFile(const std::string& filename);
     };
 
 }

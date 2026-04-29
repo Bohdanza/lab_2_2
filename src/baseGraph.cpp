@@ -6,23 +6,23 @@
 #include <sstream>
 #include <stdexcept>
 
-namespace graph
+namespace Graph
 {
 
     std::string BaseGraph::NodesToJson() const
     {
-        const auto nodes = getVertices();
+        const auto nodes = GetVertices();
         std::ostringstream oss;
         oss << "[";
         for (size_t i = 0; i < nodes.size(); ++i)
         {
             const auto& n = nodes[i];
-            const std::string label = n.weight == -1
-                ? n.label
-                : n.label + " (" + std::to_string(n.weight) + ")";
-            oss << "{\"id\":" << n.id
+            const std::string label = n.Weight == -1
+                ? n.Label
+                : n.Label + " (" + std::to_string(n.Weight) + ")";
+            oss << "{\"id\":" << n.Id
                 << ",\"label\":\"" << label << "\""
-                << ",\"weight\":" << n.weight << "}";
+                << ",\"weight\":" << n.Weight << "}";
             if (i + 1 < nodes.size()) oss << ",";
         }
         oss << "]";
@@ -31,18 +31,21 @@ namespace graph
 
     std::string BaseGraph::EdgesToJson() const
     {
-        const auto edges = getEdges();
+        const auto edges = GetEdges();
         std::ostringstream oss;
         oss << "[";
         for (size_t i = 0; i < edges.size(); ++i)
         {
             const auto& e = edges[i];
-            const std::string label = e.label.empty()
-                ? std::to_string(e.weight)
-                : e.label + " (" + std::to_string(e.weight) + ")";
-            oss << "{\"from\":" << e.from << ",\"to\":" << e.to
+            const std::string label = e.Label.empty()
+                ? std::to_string(e.Weight)
+                : e.Label + " (" + std::to_string(e.Weight) + ")";
+            oss << "{\"from\":" << e.From << ",\"to\":" << e.To
                 << ",\"label\":\"" << label << "\""
-                << ",\"weight\":" << e.weight << "}";
+                << ",\"weight\":" << e.Weight;
+            if (e.Active)
+                oss << ",\"color\":\"green\",\"width\":4";
+            oss << "}";
             if (i + 1 < edges.size()) oss << ",";
         }
         oss << "]";
@@ -56,30 +59,30 @@ namespace graph
         return oss.str();
     }
 
-    void BaseGraph::LoadFromStream(std::istream& in)
+    void BaseGraph::loadFromStream(std::istream& in)
     {
         int vertexCount = 0;
         if (!(in >> vertexCount) || vertexCount < 0)
-            throw std::runtime_error("LoadFromStream: failed to read vertex count");
+            throw std::runtime_error("loadFromStream: failed to read vertex count");
         in.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
         for (int i = 1; i <= vertexCount; ++i)
         {
             std::string line;
             if (!std::getline(in, line))
-                throw std::runtime_error("LoadFromStream: failed to read vertex line");
+                throw std::runtime_error("loadFromStream: failed to read vertex line");
             std::istringstream iss(line);
             std::string label;
             int weight = -1;
             if (!(iss >> label))
-                throw std::runtime_error("LoadFromStream: failed to read vertex label");
+                throw std::runtime_error("loadFromStream: failed to read vertex label");
             iss >> weight;
-            addVertex(i, label, weight);
+            AddVertex(i, label, weight);
         }
 
         int edgeCount = 0;
         if (!(in >> edgeCount) || edgeCount < 0)
-            throw std::runtime_error("LoadFromStream: failed to read edge count");
+            throw std::runtime_error("loadFromStream: failed to read edge count");
 
         for (int i = 0; i < edgeCount; ++i)
         {
@@ -87,16 +90,16 @@ namespace graph
             int to = 0;
             int weight = 0;
             if (!(in >> from >> to >> weight))
-                throw std::runtime_error("LoadFromStream: failed to read edge");
-            addEdge(from, to, "", weight);
+                throw std::runtime_error("loadFromStream: failed to read edge");
+            AddEdge(from, to, "", weight);
         }
     }
 
-    void BaseGraph::LoadFromFile(const std::string& filename)
+    void BaseGraph::loadFromFile(const std::string& filename)
     {
         std::ifstream file(filename);
         if (!file)
-            throw std::runtime_error("LoadFromFile: cannot open file: " + filename);
-        LoadFromStream(file);
+            throw std::runtime_error("loadFromFile: cannot open file: " + filename);
+        loadFromStream(file);
     }
 }
