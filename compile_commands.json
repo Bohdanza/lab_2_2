@@ -1,8 +1,0 @@
-[
-{
-  "directory": "D:/uni/lab_2_2/lab_2_2/lab_2_2/out/build/Debug",
-  "command": "D:\\programs\\msys64\\clangarm64\\bin\\clang++.exe -g -std=gnu++23 -gcodeview -fstandalone-debug -o CMakeFiles\\lab_2_2.dir\\src\\main.cpp.obj -c D:\\uni\\lab_2_2\\lab_2_2\\lab_2_2\\src\\main.cpp",
-  "file": "D:/uni/lab_2_2/lab_2_2/lab_2_2/src/main.cpp",
-  "output": "D:/uni/lab_2_2/lab_2_2/lab_2_2/out/build/Debug/CMakeFiles/lab_2_2.dir/src/main.cpp.obj"
-}
-]
