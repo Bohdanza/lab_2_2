@@ -38,3 +38,4 @@ compile_commands.json
 .vscode/
 .clang-format
 /.claude
+graph.html
