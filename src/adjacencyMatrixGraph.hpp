@@ -14,7 +14,7 @@ namespace Graph
             {
                 std::string Label;
                 int Weight;
-                bool Active = false;
+                char Active = 0;
             };
 
             AdjacencyMatrixGraph() = default;
@@ -24,8 +24,8 @@ namespace Graph
             void RemoveVertex(int id) override;
             void AddEdge(int from, int to, const std::string& label, int weight = 0) override;
             void RemoveEdge(int from, int to) override;
-            void SetEdgeActive(int from, int to, bool active) override;
-            void SetVertexActive(int id, bool active) override;
+            void SetEdgeActive(int from, int to, char active) override;
+            void SetVertexActive(int id, char active) override;
             void SetVertexWeight(int id, int weight) override;
             void SetEdgeWeight(int from, int to, int weight) override;
 

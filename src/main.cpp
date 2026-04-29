@@ -39,24 +39,32 @@ namespace
 
     void activateEdge(BaseGraph& g, int u, int v)
     {
-        g.SetEdgeActive(u, v, true);
-        g.SetEdgeActive(v, u, true);
+        g.SetEdgeActive(u, v, 1);
+        g.SetEdgeActive(v, u, 1);
+    }
+
+    void pathEdge(BaseGraph& g, int u, int v)
+    {
+        g.SetEdgeActive(u, v, 2);
+        g.SetEdgeActive(v, u, 2);
     }
 
     void activatePath(BaseGraph& g, const std::vector<int>& path)
     {
         for (size_t i = 1; i < path.size(); ++i)
-            activateEdge(g, path[i - 1], path[i]);
+            pathEdge(g, path[i - 1], path[i]);
     }
 }
 
-void RunBFS(BaseGraph& g, int source)
+void RunBFS(BaseGraph& g, int source, int sink)
 {
     auto adj = undirectedAdj(g);
     std::set<int> visited;
+    std::map<int, int> prev;
     std::queue<int> q;
 
     visited.insert(source);
+    prev[source] = -1;
     q.push(source);
     g.SetVertexActive(source, true);
 
@@ -67,17 +75,26 @@ void RunBFS(BaseGraph& g, int source)
         {
             if (visited.count(v)) continue;
             visited.insert(v);
+            prev[v] = u;
             g.SetVertexActive(v, true);
             activateEdge(g, u, v);
             q.push(v);
         }
     }
+
+    if (!visited.count(sink)) return;
+    std::vector<int> path;
+    for (int cur = sink; cur != -1; cur = prev[cur]) path.push_back(cur);
+    std::reverse(path.begin(), path.end());
+    activatePath(g, path);
 }
 
-void RunDFS(BaseGraph& g, int source)
+void RunDFS(BaseGraph& g, int source, int sink)
 {
     auto adj = undirectedAdj(g);
     std::set<int> visited;
+    std::map<int, int> prev;
+    prev[source] = -1;
 
     std::function<void(int)> dfs = [&](int u) {
         visited.insert(u);
@@ -85,11 +102,18 @@ void RunDFS(BaseGraph& g, int source)
         for (const auto& [v, w] : adj[u])
         {
             if (visited.count(v)) continue;
+            prev[v] = u;
             activateEdge(g, u, v);
             dfs(v);
         }
     };
     dfs(source);
+
+    if (!visited.count(sink)) return;
+    std::vector<int> path;
+    for (int cur = sink; cur != -1; cur = prev[cur]) path.push_back(cur);
+    std::reverse(path.begin(), path.end());
+    activatePath(g, path);
 }
 
 void RunKruskal(BaseGraph& g)
@@ -422,7 +446,7 @@ namespace
             int flow = originalCap[{e.From, e.To}] - cap[{e.From, e.To}];
             if (flow < 0) flow = 0;
             g.SetEdgeWeight(e.From, e.To, flow);
-            if (flow > 0) g.SetEdgeActive(e.From, e.To, true);
+            if (flow > 0) g.SetEdgeActive(e.From, e.To, 2);
         }
     }
 }
@@ -467,8 +491,8 @@ int main()
     };
 
     const std::vector<Algorithm> algorithms = {
-        {"BFS",            [](BaseGraph& g, int s, int)   { RunBFS(g, s); }},
-        {"DFS",            [](BaseGraph& g, int s, int)   { RunDFS(g, s); }},
+        {"BFS",            [](BaseGraph& g, int s, int t) { RunBFS(g, s, t); }},
+        {"DFS",            [](BaseGraph& g, int s, int t) { RunDFS(g, s, t); }},
         {"Kruskal MST",    [](BaseGraph& g, int, int)     { RunKruskal(g); }},
         {"Prim MST",       [](BaseGraph& g, int s, int)   { RunPrim(g, s); }},
         {"Bellman-Ford",   [](BaseGraph& g, int s, int t) { RunBellmanFord(g, s, t); }},

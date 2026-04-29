@@ -45,14 +45,14 @@ void EdgeListGraph::RemoveEdge(int from, int to)
                  Edges.end());
 }
 
-void EdgeListGraph::SetEdgeActive(int from, int to, bool active)
+void EdgeListGraph::SetEdgeActive(int from, int to, char active)
 {
     for (auto &e : Edges)
         if (e.From == from && e.To == to)
             e.Active = active;
 }
 
-void EdgeListGraph::SetVertexActive(int id, bool active)
+void EdgeListGraph::SetVertexActive(int id, char active)
 {
     for (auto &v : Vertices)
         if (v.Id == id)

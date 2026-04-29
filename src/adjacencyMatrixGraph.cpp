@@ -40,7 +40,7 @@ void AdjacencyMatrixGraph::AddEdge(int from, int to, const std::string& label, i
     const int fi = indexOf(from);
     const int ti = indexOf(to);
     if (fi == -1 || ti == -1) return;
-    Matrix[fi][ti] = Cell{label, weight, false};
+    Matrix[fi][ti] = Cell{label, weight, 0};
 }
 
 void AdjacencyMatrixGraph::RemoveEdge(int from, int to)
@@ -51,7 +51,7 @@ void AdjacencyMatrixGraph::RemoveEdge(int from, int to)
     Matrix[fi][ti].reset();
 }
 
-void AdjacencyMatrixGraph::SetEdgeActive(int from, int to, bool active)
+void AdjacencyMatrixGraph::SetEdgeActive(int from, int to, char active)
 {
     const int fi = indexOf(from);
     const int ti = indexOf(to);
@@ -60,7 +60,7 @@ void AdjacencyMatrixGraph::SetEdgeActive(int from, int to, bool active)
         Matrix[fi][ti]->Active = active;
 }
 
-void AdjacencyMatrixGraph::SetVertexActive(int id, bool active)
+void AdjacencyMatrixGraph::SetVertexActive(int id, char active)
 {
     const int idx = indexOf(id);
     if (idx == -1) return;

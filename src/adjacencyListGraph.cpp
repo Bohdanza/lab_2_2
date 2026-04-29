@@ -44,7 +44,7 @@ void AdjacencyListGraph::AddEdge(int from, int to, const std::string &label, int
     const int fi = indexOf(from);
     if (fi == -1 || indexOf(to) == -1)
         return;
-    Adjacency[fi].push_back({to, label, weight, false});
+    Adjacency[fi].push_back({to, label, weight, 0});
 }
 
 void AdjacencyListGraph::RemoveEdge(int from, int to)
@@ -58,7 +58,7 @@ void AdjacencyListGraph::RemoveEdge(int from, int to)
         neighbors.end());
 }
 
-void AdjacencyListGraph::SetEdgeActive(int from, int to, bool active)
+void AdjacencyListGraph::SetEdgeActive(int from, int to, char active)
 {
     const int fi = indexOf(from);
     if (fi == -1)
@@ -68,7 +68,7 @@ void AdjacencyListGraph::SetEdgeActive(int from, int to, bool active)
             n.Active = active;
 }
 
-void AdjacencyListGraph::SetVertexActive(int id, bool active)
+void AdjacencyListGraph::SetVertexActive(int id, char active)
 {
     const int idx = indexOf(id);
     if (idx == -1)

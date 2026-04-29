@@ -45,7 +45,9 @@ namespace Graph
             oss << "{\"from\":" << e.From << ",\"to\":" << e.To
                 << ",\"label\":\"" << label << "\""
                 << ",\"weight\":" << e.Weight;
-            if (e.Active)
+            if (e.Active == 2)
+                oss << ",\"color\":\"red\",\"width\":4";
+            else if (e.Active == 1)
                 oss << ",\"color\":\"green\",\"width\":4";
             else
                 oss << ",\"color\":\"orange\"";

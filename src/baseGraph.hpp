@@ -12,7 +12,7 @@ namespace Graph
         int Id;
         std::string Label;
         int Weight = -1;
-        bool Active = false;
+        char Active = 0;
     };
 
     struct Edge
@@ -21,7 +21,7 @@ namespace Graph
         int To;
         std::string Label;
         int Weight = 0;
-        bool Active = false;
+        char Active = 0;
     };
 
     class BaseGraph
@@ -33,8 +33,8 @@ namespace Graph
             virtual void RemoveVertex(int id) = 0;
             virtual void AddEdge(int from, int to, const std::string& label, int weight = 0) = 0;
             virtual void RemoveEdge(int from, int to) = 0;
-            virtual void SetEdgeActive(int from, int to, bool active) = 0;
-            virtual void SetVertexActive(int id, bool active) = 0;
+            virtual void SetEdgeActive(int from, int to, char active) = 0;
+            virtual void SetVertexActive(int id, char active) = 0;
             virtual void SetVertexWeight(int id, int weight) = 0;
             virtual void SetEdgeWeight(int from, int to, int weight) = 0;
 
