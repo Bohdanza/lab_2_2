@@ -9,9 +9,12 @@ namespace graph
     class EdgeListGraph : public BaseGraph
     {
         public:
-            void addVertex(int id, const std::string& label) override;
+            EdgeListGraph() = default;
+            explicit EdgeListGraph(const std::string& filename);
+
+            void addVertex(int id, const std::string& label, int weight = -1) override;
             void removeVertex(int id) override;
-            void addEdge(int from, int to, const std::string& label) override;
+            void addEdge(int from, int to, const std::string& label, int weight = 0) override;
             void removeEdge(int from, int to) override;
 
             std::vector<Vertex> getVertices() const override;

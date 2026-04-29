@@ -4,6 +4,11 @@
 
 using namespace graph;
 
+AdjacencyListGraph::AdjacencyListGraph(const std::string& filename)
+{
+    LoadFromFile(filename);
+}
+
 int AdjacencyListGraph::indexOf(int id) const
 {
     for (size_t i = 0; i < vertices_.size(); ++i)
@@ -13,11 +18,11 @@ int AdjacencyListGraph::indexOf(int id) const
     return -1;
 }
 
-void AdjacencyListGraph::addVertex(int id, const std::string &label)
+void AdjacencyListGraph::addVertex(int id, const std::string &label, int weight)
 {
     if (indexOf(id) != -1)
         return;
-    vertices_.push_back({id, label});
+    vertices_.push_back({id, label, weight});
     adj_.emplace_back();
 }
 
@@ -34,12 +39,12 @@ void AdjacencyListGraph::removeVertex(int id)
             neighbors.end());
 }
 
-void AdjacencyListGraph::addEdge(int from, int to, const std::string &label)
+void AdjacencyListGraph::addEdge(int from, int to, const std::string &label, int weight)
 {
     const int fi = indexOf(from);
     if (fi == -1 || indexOf(to) == -1)
         return;
-    adj_[fi].push_back({to, label});
+    adj_[fi].push_back({to, label, weight});
 }
 
 void AdjacencyListGraph::removeEdge(int from, int to)
@@ -63,7 +68,7 @@ std::vector<Edge> AdjacencyListGraph::getEdges() const
     std::vector<Edge> edges;
     for (size_t i = 0; i < vertices_.size(); ++i)
         for (const auto &n : adj_[i])
-            edges.push_back({vertices_[i].id, n.toId, n.label});
+            edges.push_back({vertices_[i].id, n.toId, n.label, n.weight});
 
     return edges;
 }
