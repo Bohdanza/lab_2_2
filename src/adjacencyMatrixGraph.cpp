@@ -9,9 +9,9 @@ AdjacencyMatrixGraph::AdjacencyMatrixGraph(const std::string& filename)
 
 int AdjacencyMatrixGraph::indexOf(int id) const
 {
-    for (size_t i = 0; i < v_vertices.size(); ++i)
+    for (size_t i = 0; i < Vertices.size(); ++i)
     {
-        if (v_vertices[i].Id == id) return static_cast<int>(i);
+        if (Vertices[i].Id == id) return static_cast<int>(i);
     }
     return -1;
 }
@@ -19,19 +19,19 @@ int AdjacencyMatrixGraph::indexOf(int id) const
 void AdjacencyMatrixGraph::AddVertex(int id, const std::string& label, int weight)
 {
     if (indexOf(id) != -1) return;
-    v_vertices.push_back({id, label, weight});
-    for (auto& row : v_matrix)
+    Vertices.push_back({id, label, weight});
+    for (auto& row : Matrix)
         row.emplace_back(std::nullopt);
-    v_matrix.emplace_back(v_vertices.size(), std::nullopt);
+    Matrix.emplace_back(Vertices.size(), std::nullopt);
 }
 
 void AdjacencyMatrixGraph::RemoveVertex(int id)
 {
     const int idx = indexOf(id);
     if (idx == -1) return;
-    v_vertices.erase(v_vertices.begin() + idx);
-    v_matrix.erase(v_matrix.begin() + idx);
-    for (auto& row : v_matrix)
+    Vertices.erase(Vertices.begin() + idx);
+    Matrix.erase(Matrix.begin() + idx);
+    for (auto& row : Matrix)
         row.erase(row.begin() + idx);
 }
 
@@ -40,7 +40,7 @@ void AdjacencyMatrixGraph::AddEdge(int from, int to, const std::string& label, i
     const int fi = indexOf(from);
     const int ti = indexOf(to);
     if (fi == -1 || ti == -1) return;
-    v_matrix[fi][ti] = Cell{label, weight, false};
+    Matrix[fi][ti] = Cell{label, weight, false};
 }
 
 void AdjacencyMatrixGraph::RemoveEdge(int from, int to)
@@ -48,7 +48,7 @@ void AdjacencyMatrixGraph::RemoveEdge(int from, int to)
     const int fi = indexOf(from);
     const int ti = indexOf(to);
     if (fi == -1 || ti == -1) return;
-    v_matrix[fi][ti].reset();
+    Matrix[fi][ti].reset();
 }
 
 void AdjacencyMatrixGraph::SetEdgeActive(int from, int to, bool active)
@@ -56,19 +56,42 @@ void AdjacencyMatrixGraph::SetEdgeActive(int from, int to, bool active)
     const int fi = indexOf(from);
     const int ti = indexOf(to);
     if (fi == -1 || ti == -1) return;
-    if (v_matrix[fi][ti].has_value())
-        v_matrix[fi][ti]->Active = active;
+    if (Matrix[fi][ti].has_value())
+        Matrix[fi][ti]->Active = active;
 }
 
-std::vector<Vertex> AdjacencyMatrixGraph::GetVertices() const { return v_vertices; }
+void AdjacencyMatrixGraph::SetVertexActive(int id, bool active)
+{
+    const int idx = indexOf(id);
+    if (idx == -1) return;
+    Vertices[idx].Active = active;
+}
+
+void AdjacencyMatrixGraph::SetVertexWeight(int id, int weight)
+{
+    const int idx = indexOf(id);
+    if (idx == -1) return;
+    Vertices[idx].Weight = weight;
+}
+
+void AdjacencyMatrixGraph::SetEdgeWeight(int from, int to, int weight)
+{
+    const int fi = indexOf(from);
+    const int ti = indexOf(to);
+    if (fi == -1 || ti == -1) return;
+    if (Matrix[fi][ti].has_value())
+        Matrix[fi][ti]->Weight = weight;
+}
+
+std::vector<Vertex> AdjacencyMatrixGraph::GetVertices() const { return Vertices; }
 
 std::vector<Edge> AdjacencyMatrixGraph::GetEdges() const
 {
     std::vector<Edge> edges;
-    for (size_t i = 0; i < v_vertices.size(); ++i)
-        for (size_t j = 0; j < v_vertices.size(); ++j)
-            if (v_matrix[i][j].has_value())
-                edges.push_back({v_vertices[i].Id, v_vertices[j].Id, v_matrix[i][j]->Label, v_matrix[i][j]->Weight, v_matrix[i][j]->Active});
+    for (size_t i = 0; i < Vertices.size(); ++i)
+        for (size_t j = 0; j < Vertices.size(); ++j)
+            if (Matrix[i][j].has_value())
+                edges.push_back({Vertices[i].Id, Vertices[j].Id, Matrix[i][j]->Label, Matrix[i][j]->Weight, Matrix[i][j]->Active});
 
     return edges;
 }

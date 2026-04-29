@@ -11,53 +11,74 @@ EdgeListGraph::EdgeListGraph(const std::string& filename)
 
 bool EdgeListGraph::hasVertex(int id) const
 {
-    return std::any_of(v_vertices.begin(), v_vertices.end(), [id](const Vertex &v) { return v.Id == id; });
+    return std::any_of(Vertices.begin(), Vertices.end(), [id](const Vertex &v) { return v.Id == id; });
 }
 
 void EdgeListGraph::AddVertex(int id, const std::string &label, int weight)
 {
     if (hasVertex(id))
         return;
-    v_vertices.push_back({id, label, weight});
+    Vertices.push_back({id, label, weight});
 }
 
 void EdgeListGraph::RemoveVertex(int id)
 {
-    v_vertices.erase(
-        std::remove_if(v_vertices.begin(), v_vertices.end(), [id](const Vertex &v) { return v.Id == id; }),
-        v_vertices.end());
-    v_edges.erase(std::remove_if(v_edges.begin(), v_edges.end(),
+    Vertices.erase(
+        std::remove_if(Vertices.begin(), Vertices.end(), [id](const Vertex &v) { return v.Id == id; }),
+        Vertices.end());
+    Edges.erase(std::remove_if(Edges.begin(), Edges.end(),
                                 [id](const Edge &e) { return e.From == id || e.To == id; }),
-                 v_edges.end());
+                 Edges.end());
 }
 
 void EdgeListGraph::AddEdge(int from, int to, const std::string &label, int weight)
 {
     if (!hasVertex(from) || !hasVertex(to))
         return;
-    v_edges.push_back({from, to, label, weight});
+    Edges.push_back({from, to, label, weight});
 }
 
 void EdgeListGraph::RemoveEdge(int from, int to)
 {
-    v_edges.erase(std::remove_if(v_edges.begin(), v_edges.end(),
+    Edges.erase(std::remove_if(Edges.begin(), Edges.end(),
                                 [from, to](const Edge &e) { return e.From == from && e.To == to; }),
-                 v_edges.end());
+                 Edges.end());
 }
 
 void EdgeListGraph::SetEdgeActive(int from, int to, bool active)
 {
-    for (auto &e : v_edges)
+    for (auto &e : Edges)
         if (e.From == from && e.To == to)
             e.Active = active;
 }
 
+void EdgeListGraph::SetVertexActive(int id, bool active)
+{
+    for (auto &v : Vertices)
+        if (v.Id == id)
+            v.Active = active;
+}
+
+void EdgeListGraph::SetVertexWeight(int id, int weight)
+{
+    for (auto &v : Vertices)
+        if (v.Id == id)
+            v.Weight = weight;
+}
+
+void EdgeListGraph::SetEdgeWeight(int from, int to, int weight)
+{
+    for (auto &e : Edges)
+        if (e.From == from && e.To == to)
+            e.Weight = weight;
+}
+
 std::vector<Vertex> EdgeListGraph::GetVertices() const
 {
-    return v_vertices;
+    return Vertices;
 }
 
 std::vector<Edge> EdgeListGraph::GetEdges() const
 {
-    return v_edges;
+    return Edges;
 }

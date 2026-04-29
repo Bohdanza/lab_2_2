@@ -26,7 +26,12 @@ namespace Graph
 
     void Visualizer::AddGraph(const std::string& json)
     {
-        v_graphs.push_back(json);
+        v_graphs.push_back({"Graph " + std::to_string(v_graphs.size() + 1), json});
+    }
+
+    void Visualizer::AddGraph(const std::string& title, const std::string& json)
+    {
+        v_graphs.push_back({title, json});
     }
 
     void Visualizer::Visualize(const std::string& path) const
@@ -34,7 +39,7 @@ namespace Graph
         std::ostringstream tiles;
         for (size_t i = 0; i < v_graphs.size(); ++i)
         {
-            tiles << "    <div class=\"tile\"><div class=\"title\">Graph " << (i + 1)
+            tiles << "    <div class=\"tile\"><div class=\"title\">" << v_graphs[i].first
                   << "</div><div id=\"graph" << i << "\" class=\"canvas\"></div></div>\n";
         }
 
@@ -42,7 +47,7 @@ namespace Graph
         payload << "[";
         for (size_t i = 0; i < v_graphs.size(); ++i)
         {
-            payload << v_graphs[i];
+            payload << v_graphs[i].second;
             if (i + 1 < v_graphs.size()) payload << ",";
         }
         payload << "]";
@@ -58,8 +63,8 @@ namespace Graph
     html, body { margin: 0; font-family: sans-serif; }
     .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(360px, 1fr)); gap: 8px; padding: 8px; box-sizing: border-box; }
     .tile { border: 1px solid #ddd; box-sizing: border-box; }
-    .title { padding: 4px 8px; background: #f5f5f5; border-bottom: 1px solid #ddd; font-size: 14px; }
-    .canvas { width: 100%; height: 480px; }
+    .title { padding: 4px 8px; background: #f5f5f5; border-bottom: 1px solid #ddd; font-size: 14px; font-weight: bold; }
+    .canvas { width: 100%; height: 360px; }
   </style>
 </head>
 <body>

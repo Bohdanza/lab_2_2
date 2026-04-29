@@ -17,14 +17,17 @@ namespace Graph
             void AddEdge(int from, int to, const std::string& label, int weight = 0) override;
             void RemoveEdge(int from, int to) override;
             void SetEdgeActive(int from, int to, bool active) override;
+            void SetVertexActive(int id, bool active) override;
+            void SetVertexWeight(int id, int weight) override;
+            void SetEdgeWeight(int from, int to, int weight) override;
 
             std::vector<Vertex> GetVertices() const override;
             std::vector<Edge> GetEdges() const override;
 
-        private:
-            std::vector<Vertex> v_vertices;
-            std::vector<Edge> v_edges;
+            std::vector<Vertex> Vertices;
+            std::vector<Edge> Edges;
 
+        private:
             bool hasVertex(int id) const;
     };
 }
